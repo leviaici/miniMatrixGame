@@ -105,12 +105,20 @@ struct Username {
 bool selectedUsername = false;
 Username username;
 
+bool printed = false;
+const byte delayPeriod = 100;
+int count = 0;                                              // counter for non-space, non-enter characters
+bool delayed = false;
+unsigned long delayTime;
+
+char input[numberOfCharacters];
+
 unsigned long getRandomSeed() {                             // generating a random seed
-    unsigned long seed = NONE;
-    seed = millis();
-    for (int i = NONE; i < matrixSize; ++i)
-        seed = seed + analogRead(i);
-    return seed;
+  unsigned long seed = NONE;
+  seed = millis();
+  for (int i = NONE; i < matrixSize; ++i)
+      seed = seed + analogRead(i);
+  return seed;
 }
 
 void setup() {
@@ -123,46 +131,39 @@ void setup() {
   randomSeed(getRandomSeed());                              // seed the random number generator
   
   setStartPosition();                                       // sets the user's start position
-
-  printNameMatrix();                                        // prints "?" on matrix as it waits for user to choose a username
-  selectUsername();                                         // selecting the username
-
-  printWaitingMatrix();                                     // prints "lvl" on matrix to wait until a level is selected
-  selectLevel();                                            // selecting the level
-
-  fillMatrix();                                             // it fills the matrix with the randomly generated map
-  printMatrix();                                            // prints the matrix on the 8x8 led matrix
-
-  userStartTime = millis();                                 // starts counter for the user's score
 }
 
 void selectUsername() {
-  char input[numberOfCharacters];
-  Serial.println(F("Hello! Please, enter your to-be username (3 characters only - EXC)!"));
-  while (!selectedUsername) {
-    int count = 0; // Counter for non-space, non-enter characters
-    while (count < numberOfCharacters - 1) {
+  if(!printed) {
+    printNameMatrix();
+    Serial.println(F("Hello! Please, enter your to-be username (3 characters only - EXC)!"));
+    printed = true;
+  }
+
+  if (!selectedUsername) {
+    if (count < numberOfCharacters - 1) {
       if (Serial.available()) {
         char incomingChar = Serial.read();
-        if (incomingChar != '\n' && incomingChar != ' ') {
+        if ((incomingChar >= 'a' && incomingChar <= 'z') || (incomingChar >= 'A' && incomingChar <= 'Z')) {
           input[count] = incomingChar;
           count++;
         }
       }
-    }
-    Serial.read(); // Consume the newline character
-    input[numberOfCharacters - 1] = '\0';
-    selectedUsername = true;
-  }
-  strncpy(username.name, input, numberOfCharacters);
-  Serial.println(String(username.name));
-
-  // Delay for a short period to allow the serial buffer to clear
-  delay(100);
-
-  // Flush the serial input buffer
-  while (Serial.available()) {
-    Serial.read();
+    } else {
+      if(!delayed) {
+        delayTime = millis();
+        delayed = true;
+      } else if (millis() - delayTime >= delayPeriod) {       // implementing a sort of delay to clear the buffer
+        if (Serial.available())
+          Serial.read();
+        else {
+          selectedUsername = true;
+          printed = false;
+          input[numberOfCharacters - 1] = '\0';
+          strncpy(username.name, input, numberOfCharacters);  // storing the value in username 
+        }
+      }
+    } 
   }
 }
 
@@ -203,17 +204,24 @@ void printWaitingMatrix() {
 }
 
 void selectLevel() {
-  Serial.println(F("Select a difficulty (1-3). 1 - EASY, 2 - MEDIUM, 3 - HARD"));
-  while(!LEVEL) {
+  if(!printed) {
+    printWaitingMatrix();
+    Serial.println(F("Select a difficulty (1-3). 1 - EASY, 2 - MEDIUM, 3 - HARD"));
+    printed = true;
+  }
+  if(!LEVEL) {
     if(Serial.available() > 0) {
       int readValue = Serial.parseInt();
       Serial.read();
-      if(readValue && readValue <= HARD) 
+      if(readValue && readValue <= HARD) {
         LEVEL = readValue;
-      else Serial.println(F("Difficulty not implemented. You must put a value between 1 and 3.\nSelect a difficulty (1-3). 1 - EASY, 2 - MEDIUM, 3 - HARD"));
+        printed = false;
+        // Serial.println(LEVEL);
+        fillMatrix();
+        printMatrix();
+      } else Serial.println(F("Difficulty not implemented. You must put a value between 1 and 3.\nSelect a difficulty (1-3). 1 - EASY, 2 - MEDIUM, 3 - HARD"));
     }
   }
-  Serial.println(LEVEL);
 }
 
 void setStartPosition() {
@@ -227,7 +235,11 @@ void setStartPosition() {
 
 void loop() {
   currentTime = millis();
-  if(!won) {
+  if(!LEVEL) {
+    if(!selectedUsername) {
+      selectUsername();
+    } else selectLevel();
+  } else if(!won) {
     updateUserBlinking();
     movement();
     bombing();
@@ -248,6 +260,8 @@ void waitForReset() {
       LEVEL = NONE;                                         
       won = false;
       selectedUsername = false;
+      delayed = false;
+      count = NONE;
       setup();
     }
     buttonPressed = false;                                                    // resetting the value for the next press
@@ -419,6 +433,7 @@ void fillMatrix() {
   }
 
   matrix[playerRow][playerCol] = ' ';       // clearing the user's place in matrix
+  userStartTime = millis();
 }
 
 void clearMatrix() {
