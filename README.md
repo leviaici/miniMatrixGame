@@ -24,6 +24,7 @@ Small game on the 8x8 matrix. The basic idea of the game is that it generates ra
 <ol><b>Game Reset:</b> After completing the maze, press the physical button to reset the game for a new challenge.<br></ol>
   
 <br><b>To do/use list:</b><br>
+<img src = 'https://github.com/leviaici/miniMatrixGame/blob/main/Mini_Matrix_Game/IMG_6616.jpeg' align="right" width = 300>
   
 - [X] Arduino UNO Board
 - [X] Joystick
