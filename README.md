@@ -17,7 +17,8 @@ Small game on the 8x8 matrix. The basic idea of the game is that it generates ra
 <br><b><h3>How to Use</h3></b>
 
 <ol><b>Power On:</b> Connect your Arduino Uno and power it on.<br></ol>
-<ol><b>Set Difficulty:</b> Choose the difficulty level (1 to 3) by entering the corresponding number.<br></ol>
+<ol><b>Set Username:</b> Choose the username (3 characters maximum) by entering the corresponding username using the keyboard.<br></ol>
+<ol><b>Set Difficulty:</b> Choose the difficulty level (1 to 3) by entering the corresponding number using the keyboard.<br></ol>>
 <ol><b>Navigate the Maze:</b> Use the joystick to move through the maze.<br></ol>
 <ol><b>Place Bombs:</b> Click the physical button to place bombs strategically and clear walls.<br></ol>
 <ol><b>Beat the High Score:</b> Your best times are saved in EEPROM. Beat your previous high scores!<br></ol>
