@@ -97,6 +97,14 @@ const byte ASCII = 48;
 
 bool won = false;
 
+const byte numberOfCharacters = 4;
+struct Username {
+  char name[numberOfCharacters] = "";
+};
+
+bool selectedUsername = false;
+Username username;
+
 unsigned long getRandomSeed() {                             // generating a random seed
     unsigned long seed = NONE;
     seed = millis();
@@ -109,18 +117,15 @@ void setup() {
   Serial.begin(BAUD);
   pinMode(buttonPin, INPUT_PULLUP);
 
-  // delay(5000);
-  // checkWin();
-  // checkHighscores();
-  // for(int i = 0; i < 1024; i++)
-  //   EEPROM.update(i, 0);
-
-  randomSeed(getRandomSeed());                              // seed the random number generator
-
   lc.shutdown(NONE, false);                                 // turn off power saving, enables display
+  
   lc.setIntensity(NONE, matrixBrightness);                  // sets brightness (NONE~15 possible values)
+  randomSeed(getRandomSeed());                              // seed the random number generator
   
   setStartPosition();                                       // sets the user's start position
+
+  printNameMatrix();                                        // prints "?" on matrix as it waits for user to choose a username
+  selectUsername();                                         // selecting the username
 
   printWaitingMatrix();                                     // prints "lvl" on matrix to wait until a level is selected
   selectLevel();                                            // selecting the level
@@ -129,6 +134,54 @@ void setup() {
   printMatrix();                                            // prints the matrix on the 8x8 led matrix
 
   userStartTime = millis();                                 // starts counter for the user's score
+}
+
+void selectUsername() {
+  char input[numberOfCharacters];
+  Serial.println(F("Hello! Please, enter your to-be username (3 characters only - EXC)!"));
+  while (!selectedUsername) {
+    int count = 0; // Counter for non-space, non-enter characters
+    while (count < numberOfCharacters - 1) {
+      if (Serial.available()) {
+        char incomingChar = Serial.read();
+        if (incomingChar != '\n' && incomingChar != ' ') {
+          input[count] = incomingChar;
+          count++;
+        }
+      }
+    }
+    Serial.read(); // Consume the newline character
+    input[numberOfCharacters - 1] = '\0';
+    selectedUsername = true;
+  }
+  strncpy(username.name, input, numberOfCharacters);
+  Serial.println(String(username.name));
+
+  // Delay for a short period to allow the serial buffer to clear
+  delay(100);
+
+  // Flush the serial input buffer
+  while (Serial.available()) {
+    Serial.read();
+  }
+}
+
+void printNameMatrix() {
+  lc.clearDisplay(NONE);                                    // clear screen
+  byte waitingMatrix[matrixSize][matrixSize] = {
+    {0, 0, 1, 1, 1, 1, 0, 0}, 
+    {0, 1, 1, 0, 0, 1, 1, 0}, 
+    {0, 0, 0, 0, 0, 1, 1, 0}, 
+    {0, 0, 0, 1, 1, 1, 0, 0}, 
+    {0, 0, 0, 1, 1, 0, 0, 0}, 
+    {0, 0, 0, 1, 1, 0, 0, 0}, 
+    {0, 0, 0, 0, 0, 0, 0, 0}, 
+    {0, 0, 0, 1, 1, 0, 0, 0}
+  };
+
+  for(int row = NONE; row < matrixSize; row++) 
+    for(int col = NONE; col < matrixSize; col++) 
+      lc.setLed(NONE, row, col, waitingMatrix[row][col]);
 }
 
 void printWaitingMatrix() {
@@ -160,6 +213,7 @@ void selectLevel() {
       else Serial.println(F("Difficulty not implemented. You must put a value between 1 and 3.\nSelect a difficulty (1-3). 1 - EASY, 2 - MEDIUM, 3 - HARD"));
     }
   }
+  Serial.println(LEVEL);
 }
 
 void setStartPosition() {
@@ -193,6 +247,7 @@ void waitForReset() {
     if (buttonPressed && currentTime - buttonPressedTime >= debounceDelay) {  // resetting the game
       LEVEL = NONE;                                         
       won = false;
+      selectedUsername = false;
       setup();
     }
     buttonPressed = false;                                                    // resetting the value for the next press
@@ -345,7 +400,7 @@ void fillMatrix() {
 
   switch (LEVEL) {                          // deciding the number of walls for every level
     case 1:
-      numHash = 32;
+      numHash = 1;
       break;
     case 2:
       numHash = 45;
@@ -385,25 +440,36 @@ bool checkWin() {
         return false;
   userWinTime = millis();
   float score = float(userWinTime - userStartTime) / 1000;                                  // displaying the time as seconds
+  // float score = 10.00;
+  // strcpy(username.name, "CNM\0");
   Serial.print(F("You've completed the level in just "));
   Serial.print(score);
   Serial.println(F(" seconds!"));
 
   float highscores[numberOfSavings];
-  for (int i = 0; i < numberOfSavings; i++)
+  Username usernames[numberOfSavings];
+  for (int i = 0; i < numberOfSavings; i++) {
     EEPROM.get((LEVEL - 1) * floatSize * numberOfSavings + i * floatSize, highscores[i]);   // retrieve the existing high scores from EEPROM
+    EEPROM.get(startNicknames + (LEVEL - 1) * floatSize * numberOfSavings + i * floatSize, usernames[i].name);    // retrieve the usernames of the owners of the high scores from EEPROM
+  }
 
   for(int i = 0; i < numberOfSavings; i++)
     if(score < highscores[i] || !highscores[i]) {
       for(int j = numberOfSavings - 1; j > i; j--) {
         highscores[j] = highscores[j - 1];
+        strncpy(usernames[j].name, usernames[j-1].name, numberOfCharacters);
+        // usernames[j].name[numberOfCharacters - 1] = '\0'; // Null-terminate the string
       }
       highscores[i] = score;
+      strncpy(usernames[i].name, username.name, numberOfCharacters);
+      // usernames[i].name[numberOfCharacters - 1] = '\0'; // Null-terminate the string
       break;
     }
 
-  for (int i = 0; i < numberOfSavings; i++) 
+  for (int i = 0; i < numberOfSavings; i++) {
     EEPROM.put((LEVEL - 1) * floatSize * numberOfSavings + i * floatSize, highscores[i]);   // updating the EEPROM with the new highscores
+    EEPROM.put(startNicknames + (LEVEL - 1) * floatSize * numberOfSavings + i * floatSize, usernames[i].name);   // updating the EEPROM with the new usernames
+  }
   
   checkHighscores();                                                                        // printing existing highscores for user
   return true;
@@ -414,8 +480,12 @@ void checkHighscores() {
     Serial.println("Level " + String(levels + 1));
     for(int i = NONE; i < numberOfSavings; i++) {
       float highscore;
+      Username user;
       EEPROM.get((levels) * floatSize * numberOfSavings + i * floatSize, highscore);
-      Serial.println(String(i + 1) + ". " + String(highscore));
+      EEPROM.get(startNicknames + (levels) * floatSize * numberOfSavings + i * floatSize, user.name);
+      Serial.print(String(i + 1) + ". ");
+      Serial.print(user.name);
+      Serial.println(": " + String(highscore) + "s");
     }
   }
   Serial.println(F("Press the button to reset the game and start once again!"));
