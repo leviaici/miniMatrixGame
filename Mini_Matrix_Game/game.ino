@@ -83,7 +83,7 @@ unsigned long userWinTime;
 bool blinkState = false;                                    // blink states
 bool bombBlinkState = false;
 
-const unsigned int joystickSensitivity = 100;               // joystick settings
+const unsigned int joystickSensitivity = 50;                // joystick settings
 bool joystickMoved = false;
 
 unsigned int minimumThreshold = 350;
@@ -400,7 +400,7 @@ void fillMatrix() {
 
   switch (LEVEL) {                          // deciding the number of walls for every level
     case 1:
-      numHash = 1;
+      numHash = 32;
       break;
     case 2:
       numHash = 45;
