@@ -216,7 +216,6 @@ void selectLevel() {
       if(readValue && readValue <= HARD) {
         LEVEL = readValue;
         printed = false;
-        // Serial.println(LEVEL);
         fillMatrix();
         printMatrix();
       } else Serial.println(F("Difficulty not implemented. You must put a value between 1 and 3.\nSelect a difficulty (1-3). 1 - EASY, 2 - MEDIUM, 3 - HARD"));
@@ -394,7 +393,6 @@ void verifyJoystickMotion(int posY, int posX) {
 }
 
 bool verifyModifyState(int posY, int posX) {
-  // return matrix[playerRow + posY][playerCol + posX] == walls[NONE] && (playerRow + posY < matrixSize) && (playerRow + posY >= NONE) && (playerCol + posX < matrixSize) && (playerCol + posX >= NONE);
   if(matrix[playerRow + posY][playerCol + posX] == walls[1])      // verifying if a wall is there
     return false;
   if(playerRow + posY >= matrixSize)                              // next, verifying if it's not going after the matrix limits
@@ -455,8 +453,6 @@ bool checkWin() {
         return false;
   userWinTime = millis();
   float score = float(userWinTime - userStartTime) / 1000;                                  // displaying the time as seconds
-  // float score = 10.00;
-  // strcpy(username.name, "CNM\0");
   Serial.print(F("You've completed the level in just "));
   Serial.print(score);
   Serial.println(F(" seconds!"));
@@ -464,7 +460,7 @@ bool checkWin() {
   float highscores[numberOfSavings];
   Username usernames[numberOfSavings];
   for (int i = 0; i < numberOfSavings; i++) {
-    EEPROM.get((LEVEL - 1) * floatSize * numberOfSavings + i * floatSize, highscores[i]);   // retrieve the existing high scores from EEPROM
+    EEPROM.get((LEVEL - 1) * floatSize * numberOfSavings + i * floatSize, highscores[i]);                         // retrieve the existing high scores from EEPROM
     EEPROM.get(startNicknames + (LEVEL - 1) * floatSize * numberOfSavings + i * floatSize, usernames[i].name);    // retrieve the usernames of the owners of the high scores from EEPROM
   }
 
@@ -473,11 +469,9 @@ bool checkWin() {
       for(int j = numberOfSavings - 1; j > i; j--) {
         highscores[j] = highscores[j - 1];
         strncpy(usernames[j].name, usernames[j-1].name, numberOfCharacters);
-        // usernames[j].name[numberOfCharacters - 1] = '\0'; // Null-terminate the string
       }
       highscores[i] = score;
       strncpy(usernames[i].name, username.name, numberOfCharacters);
-      // usernames[i].name[numberOfCharacters - 1] = '\0'; // Null-terminate the string
       break;
     }
 
