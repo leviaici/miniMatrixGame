@@ -15,6 +15,7 @@ Small game on the 8x8 matrix. The basic idea of the game is that it generates ra
 <ol><b>Customize:</b> Set the brightnesses for LCD or Matrix using Settings Menu. Toggle the sound on/off. All these are saved in EEPROM.<br></ol>
 <ol><b>About:</b> Some words about me, the creator.<br></ol>
 <ol><b>How To Play:</b> Small tutorial of how to use and play the game.<br></ol>
+<ol><b>Live Updates!:</b> Whenever the user is playing the game, live updates will be displayed on the LCD (such like username, number of available bombs and his time).<br></ol>
 <ol><b>Game Reset:</b> After completing the maze, press the physical button to reset the game and start a new challenge.<br></ol>
 
 <br><b><h3>How to Use</h3></b>
