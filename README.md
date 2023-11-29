@@ -42,6 +42,6 @@ Small game on the 8x8 matrix. The basic idea of the game is that it generates ra
 - [X] Resistors, capacitors and wires as needed
 - [X] Breadboard 
 - [X] Arduino Code
-- [X] Yotube Link: https://www.youtube.com/watch?v=Q00_0WmDssw
+- [X] Yotube Link: https://www.youtube.com/watch?v=WrsUc29QS9I
 - [X] Setup photo
 </details><br>
