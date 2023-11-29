@@ -1,7 +1,7 @@
 # miniMatrixGame
 
 <details>
-<summary><h2>Homework 6: Mini Matrix Game</h2></summary>
+<summary><h2>Homework 7: Mini Matrix Game + Menu (Update of Homework 6)</h2></summary>
 <b>Technical Task -></b>
 Small game on the 8x8 matrix. The basic idea of the game is that it generates random walls on the map (50% - 75% of the map) and then you move around with the player and destroy them.
 
