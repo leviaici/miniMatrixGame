@@ -85,7 +85,7 @@
 - [X] Push-Button
 - [X] Resistors, capacitors and wires as needed
 - [X] Breadboard
-- [X] Yotube Link (video showcase): https://www.youtube.com/watch?v=YXtJxBpymrI
+- [X] Yotube Link (video showcase): https://youtu.be/ymxeLCfF6EE
 
 </details>
 
