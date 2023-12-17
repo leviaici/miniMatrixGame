@@ -9,7 +9,7 @@
 <summary><h3>Backstory Of The Game</h3></summary>
 
 #### Why did I choose this game idea?
-&emsp;I chose to develop Bombentziu, a Bomberman-style game because of its timeless appeal and straightforward yet entertaining gameplay. The nostalgic memories of playing Bomberman with friends sparked my enthusiasm to recreate that shared joy and strategic excitement in a modern gaming experience.<br><br>
+&emsp;I chose to develop Bombentziu, a Bomberman-style game because of its timeless appeal and straightforward yet entertaining gameplay. The nostalgic memories of playing this type of game with friends sparked my enthusiasm to recreate that shared joy and strategic excitement in a modern gaming experience.<br><br>
 
 #### Where did I encounter some problems?
   <ol>- Generating the randomly spawned walls so it can be fun to play more than once.</ol>
@@ -72,7 +72,8 @@
 <ol><b>Game Reset:</b> After completing the game, you are free to navigate the menu so you can start the game once again.</ol></details>
   
 <details>
-<summary><h3>Hardware Used</h3></summary>
+<summary><h3>Hardware Used And Showcase</h3></summary>
+<img src = 'https://github.com/leviaici/IntroductionToRobotics/blob/main/Homework_7/IMG_7184.jpeg' align="right" width = 300>
   
 - [X] Arduino UNO Board
 - [X] Potentiometer
@@ -83,11 +84,14 @@
 - [X] MAX7219
 - [X] Push-Button
 - [X] Resistors, capacitors and wires as needed
-- [X] Breadboard 
+- [X] Breadboard
+- [X] Yotube Link (video showcase): https://www.youtube.com/watch?v=YXtJxBpymrI
 
 </details>
 
-<details>
-<summary><h3>Showcase</h3></summary>
-<img src = 'https://github.com/leviaici/IntroductionToRobotics/blob/main/Homework_7/IMG_7184.jpeg' align="right" width = 300>
-</details>
+## Notes
+
+&emsp;Please note that these homework assignments are part of my academic coursework at the University of Bucharest. Feel free to explore the code, documentation, and solutions to gain insights into the exciting world of robotics and computer science.
+
+## Disclaimer
+&emsp;This repository is for educational purposes, and you are encouraged to learn from it. However, please avoid direct copying of code for your own coursework.
