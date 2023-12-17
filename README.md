@@ -73,7 +73,7 @@
   
 <details>
 <summary><h3>Hardware Used And Showcase</h3></summary>
-<img src = 'https://github.com/leviaici/IntroductionToRobotics/blob/main/Homework_7/IMG_7184.jpeg' align="right" width = 300>
+<img src = 'https://github.com/leviaici/miniMatrixGame/blob/main/Mini_Matrix_Game/IMG_7184.jpeg' align="right" width = 300>
   
 - [X] Arduino UNO Board
 - [X] Potentiometer
