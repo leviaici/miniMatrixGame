@@ -956,7 +956,7 @@ void setBrightness(byte brightnessCase) {
 
 void setSound() {             // toggling on/off the sound and modifying the printings on the submenu
   sounds = !sounds;
-  lcd.setCursor(9,1);
+  lcd.setCursor(9,NONE);
   lcd.print(sounds ? F("ON ") : F("OFF"));
   inFunction = false;
 }
